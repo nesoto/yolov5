@@ -153,11 +153,15 @@ def run(
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
-
+                suma = 0
                 # Print results
                 for c in det[:, 5].unique():
                     n = (det[:, 5] == c).sum()  # detections per class
-                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
+                    if (names[int(c)] == 'car'):
+                        suma += n
+                    if (names[int(c)] == 'truck'):
+                        suma += n
+                s += f"{suma} car{'s' * (suma > 1)}, "  # agrega al string solos autos, sumando autos con camionetas
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
